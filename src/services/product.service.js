@@ -26,4 +26,30 @@ async function getProductsByCategory(categoryId) {
   });
 }
 
-module.exports = { getProducts, createProducts, getProductsByCategory };
+async function deleteProducts(id){
+  return await prisma.product.delete({
+    where: {
+      id:id
+
+    }
+  })
+}
+
+async function updateProducts(id, data){
+  return await prisma.product.update({
+    where:{
+      id:id
+    },
+    data:{
+      price: data.price,
+      description: data.description,
+      banner: data.banner,
+      categoryId: data.categoryId, 
+
+    }
+  })
+}
+
+
+
+module.exports = { getProducts, createProducts, getProductsByCategory, deleteProducts, updateProducts };
