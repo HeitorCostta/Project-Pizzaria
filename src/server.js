@@ -5,6 +5,7 @@ require("dotenv").config();
 const productRoutes = require("./routes/product.routes");
 const clientRoutes = require("./routes/client.routes");
 const categoryRoutes = require("./routes/category.routes");
+const orderRoutes = require ("./routes/order.routes");
 
 const app = express();
 
@@ -15,6 +16,7 @@ app.use(express.json());
 app.use("/products", productRoutes);
 app.use("/clients", clientRoutes);
 app.use("/categories", categoryRoutes);
+app.use("/orders", orderRoutes)
 
 app.get("/", (req, res) => {
   res.json({ message: "API Pizza Running 🍕" });
