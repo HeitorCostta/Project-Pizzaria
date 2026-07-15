@@ -1,4 +1,7 @@
-const { createCategory } = require("../services/category.service");
+const {
+  createCategory,
+  getCategories,
+} = require("../services/category.service");
 
 async function categoryController(req, res) {
   // 🔍 Ajustado para uma chave só
@@ -36,4 +39,17 @@ async function categoryController(req, res) {
   }
 }
 
-module.exports = { categoryController };
+async function getCategoriesController(req, res) {
+  try {
+    const categories = await getCategories();
+    return res.status(200).json(categories);
+  } catch (error) {
+    console.error("Erro ao buscar categorias:", error);
+    return res.status(500).json({
+      error: "Internal Server Error",
+      message: "Ocorreu um erro ao buscar as categorias.",
+    });
+  }
+}
+
+module.exports = { categoryController, getCategoriesController };

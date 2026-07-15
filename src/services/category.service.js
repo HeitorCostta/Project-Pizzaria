@@ -9,4 +9,8 @@ async function createCategory(data) {
   });
 }
 
-module.exports = { createCategory };
+async function getCategories() {
+  return await prisma.category.findMany();
+}
+
+module.exports = { createCategory, getCategories };
