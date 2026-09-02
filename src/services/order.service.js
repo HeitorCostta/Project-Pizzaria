@@ -18,6 +18,26 @@ async function getOrders() {
 }
 
 async function addItem(data) {
+  const order = await prisma.order.findUnique({
+    where: {
+      id: data.orderId,
+    },
+  });
+
+  if (!order) {
+    const error = new Error("Pedido não encontrado.");
+    error.code = "ORDER_NOT_FOUND";
+    throw error;
+  }
+
+  if (order.draft === false) {
+    const error = new Error(
+      "Não é possível adicionar item a um pedido já finalizado."
+    );
+    error.code = "ORDER_ALREADY_FINISHED";
+    throw error;
+  }
+
   return await prisma.orderItem.create({
     data: {
       amount: data.amount,
