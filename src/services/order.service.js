@@ -38,6 +38,21 @@ async function addItem(data) {
     throw error;
   }
 
+  const product = await prisma.product.findUnique({
+    where: {
+      id: data.productId,
+    },
+    select: {
+      id: true,
+    },
+  });
+
+  if (!product) {
+    const error = new Error("Produto não encontrado.");
+    error.code = "PRODUCT_NOT_FOUND";
+    throw error;
+  }
+
   return await prisma.orderItem.create({
     data: {
       amount: data.amount,

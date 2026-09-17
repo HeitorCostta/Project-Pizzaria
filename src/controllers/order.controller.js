@@ -97,6 +97,13 @@ async function addItemController(req, res) {
       });
     }
 
+    if (error.code === "PRODUCT_NOT_FOUND") {
+      return res.status(404).json({
+        error: "Not Found",
+        message: error.message,
+      });
+    }
+
     console.error("Erro ao adicionar item:", error);
     return res.status(500).json({
       error: "Internal Server Error",
