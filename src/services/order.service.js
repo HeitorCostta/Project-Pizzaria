@@ -71,6 +71,24 @@ async function removeItem(orderItemID) {
 }
 
 async function finishOrder(orderId) {
+  const order = await prisma.order.findUnique({
+    where: {
+      id: orderId,
+    },
+  });
+
+  if (!order) {
+    const error = new Error("Pedido não encontrado.");
+    error.code = "ORDER_NOT_FOUND";
+    throw error;
+  }
+
+  if (order.draft === false) {
+    const error = new Error("Pedido já finalizado.");
+    error.code = "ORDER_ALREADY_FINISHED";
+    throw error;
+  }
+
   return await prisma.order.update({
     where: {
       id: orderId,

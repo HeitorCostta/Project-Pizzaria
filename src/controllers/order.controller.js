@@ -141,7 +141,6 @@ async function removeItemController(req, res) {
 async function updateItemController(req, res) {
   try {
     const { id } = req.params;
-    const { status, draft } = req.body;
 
     if (!id) {
       return res.status(400).json({
@@ -150,16 +149,29 @@ async function updateItemController(req, res) {
       });
     }
 
-    // Chama o service correto passando o ID para atualizar no banco
     const updatedOrder = await finishOrder(id);
 
-    // Retorna o resultado final e responde o Postman
     return res.status(200).json({
       order: updatedOrder,
-      message: "Pedido atualizado/concluído com sucesso! 🏁",
+      message: "Pedido atualizado com sucesso.",
     });
   } catch (error) {
+    if (error.code === "ORDER_NOT_FOUND") {
+      return res.status(404).json({
+        error: "Not Found",
+        message: error.message,
+      });
+    }
+
+    if (error.code === "ORDER_ALREADY_FINISHED") {
+      return res.status(409).json({
+        error: "Conflict",
+        message: error.message,
+      });
+    }
+
     console.error("Erro ao atualizar pedido:", error);
+
     return res.status(500).json({
       error: "Internal Server Error",
       message: "Erro ao atualizar o pedido.",
