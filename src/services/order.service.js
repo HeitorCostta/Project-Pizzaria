@@ -44,6 +44,7 @@ async function addItem(data) {
     },
     select: {
       id: true,
+      price: true,
     },
   });
 
@@ -58,6 +59,7 @@ async function addItem(data) {
       amount: data.amount,
       orderId: data.orderId,
       productId: data.productId,
+      unitPrice: product.price,
     },
   });
 }
@@ -119,9 +121,9 @@ async function getOrderDetails(orderId) {
   if (!order) return null;
 
   // 2. A MÁGICA DA MATEMÁTICA: Calculamos o valor total usando o reduce do JavaScript
-  // Percorremos cada item faturado, multiplicando a quantidade (amount) pelo preço (price) do produto
+  // Calculamos cada item usando a quantidade e o preço unitário registrado no momento da venda
   const total = order.items.reduce((sum, item) => {
-    const itemPrice = parseFloat(item.product.price) || 0;
+    const itemPrice = parseFloat(item.unitPrice) || 0;
     return sum + item.amount * itemPrice;
   }, 0);
 
